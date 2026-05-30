@@ -33,7 +33,7 @@ dev = ["pylint", "black"]
 # Extra deps for the Genesis-simulator examples under oscbf/examples/genesis/
 # (Piper + Franka demos with rendered MP4 output). Optional because the
 # rest of OSCBF only needs PyBullet.
-genesis = ["genesis-world>=1.0.0", "imageio[ffmpeg]"]
+genesis = ["genesis-world>=1.0.0", "imageio[ffmpeg]", "torch"]
 
 [tool.setuptools.packages.find]
 exclude = ["artifacts", "images"]
