@@ -52,9 +52,48 @@ cd oscbf
 pip install -e .
 ```
 
+To also run the Genesis-simulator examples (see [Piper + Genesis examples](#piper--genesis-examples) below), install with the `genesis` extra:
+
+```
+pip install -e .[genesis]
+```
+
+This pulls in `genesis-world` and `imageio[ffmpeg]` on top of the core deps.
+
 Note: This code will work with most versions of `jax`, but there seems to have been a CPU slowdown introduced in version `0.4.32`. To avoid this, I use version `0.4.30`, which is the version indicated in this repo's `pyproject.toml` as well. However, feel free to use any version you like.
 
 This has been tested on Python 3.10 and 3.11, on Ubuntu 22.04.
+
+
+## Piper + Genesis examples
+
+This fork adds support for the 6-DOF **AgileX Piper** arm and a set of
+demos that run on the **Genesis** simulator (in addition to OSCBF's existing
+PyBullet examples).
+
+- `oscbf.core.manipulator.load_piper()` mirrors `load_panda()` — returns a
+  `Manipulator` with kinematics/dynamics from the bundled URDF
+  (`oscbf/assets/piper/`) and a 12-sphere collision model (`oscbf/core/piper_collision_model.py`).
+- `oscbf/examples/genesis/` contains six demos (single + dual arm, Piper +
+  Franka) and three tools (sphere auto-fit, sphere visualization, joint sweep).
+
+After `pip install -e .[genesis]`, reproduce the headline result:
+
+```
+python -m oscbf.examples.genesis.piper_dual_arm                # with CBF
+python -m oscbf.examples.genesis.piper_dual_arm --no_filter    # without
+```
+
+Two AgileX Pipers facing forward, 30 cm apart, with a 40 cm 50 g obstacle box behind them; both arms run a random joint-velocity policy. The CBF
+enforces 192 barriers (24 joint + 24 sphere-vs-box + 144 inter-arm).
+
+| Metric | filter on | filter off |
+|---|---|---|
+| Box-collision frames | 0 / 1000 | 671 / 1000 |
+| Inter-arm collision frames | 0 / 1000 | 189 / 1000 |
+| Box displacement | 0.000 m | 0.323 m |
+
+See `oscbf/examples/genesis/README.md` for the full list of demos.
 
 
 ## Documentation

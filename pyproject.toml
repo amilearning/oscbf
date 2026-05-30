@@ -12,7 +12,7 @@ keywords = ["control", "barrier", "function", "CBF", "Jax", "operational", "spac
 # TODO: Have a better way of managing these dependencies
 # There was a slowdown introduced in jax 0.4.32
 dependencies = [
-    "numpy", 
+    "numpy<2",            # cbfpy 0.0.1 currently requires numpy < 2
     "jax==0.4.30",
     "jaxlib==0.4.30",
     "cbfpy==0.0.1",
@@ -30,6 +30,10 @@ Repository = "https://github.com/stanfordasl/oscbf/"
 
 [project.optional-dependencies]
 dev = ["pylint", "black"]
+# Extra deps for the Genesis-simulator examples under oscbf/examples/genesis/
+# (Piper + Franka demos with rendered MP4 output). Optional because the
+# rest of OSCBF only needs PyBullet.
+genesis = ["genesis-world>=1.0.0", "imageio[ffmpeg]"]
 
 [tool.setuptools.packages.find]
 exclude = ["artifacts", "images"]
