@@ -15,6 +15,7 @@ from oscbf.core.franka_collision_model import (
     franka_self_collision_data,
     base_self_collision_data,
 )
+from oscbf.core.piper_collision_model import piper_collision_data
 
 
 def tuplify(arr):
@@ -920,6 +921,31 @@ def load_panda() -> Manipulator:
         collision_data=franka_collision_data,
         self_collision_data=franka_self_collision_data,
         base_self_collision_data=base_self_collision_data,
+    )
+
+
+def load_piper(with_collision: bool = True) -> Manipulator:
+    """Create a Manipulator object for the AgileX Piper (6-DOF + fixed gripper).
+
+    The bundled URDF (`piper.urdf`) has the two prismatic finger joints set to
+    `fixed` so kinematics/dynamics fold into link6 — OSCBF therefore sees a
+    pure 6-joint chain with gripper mass merged at the wrist.
+
+    Args:
+        with_collision: include the hand-fit 12-sphere collision model.
+                        Set False for joint-limit / EE-workspace CBFs only.
+    """
+    # TCP between the two open fingertips, 20 cm past link6 origin along its z.
+    ee_offset = np.block(
+        [
+            [np.eye(3), np.reshape(np.array([0.0, 0.0, 0.20]), (-1, 1))],
+            [0.0, 0.0, 0.0, 1.0],
+        ]
+    )
+    return Manipulator.from_urdf(
+        str(ASSETS_DIR / "piper/piper.urdf"),
+        ee_offset=ee_offset,
+        collision_data=piper_collision_data if with_collision else None,
     )
 
 

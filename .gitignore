@@ -3,3 +3,7 @@ __pycache__
 .python-version
 site/
 .vscode/
+
+# Genesis demo outputs
+*.mp4
+*.png
